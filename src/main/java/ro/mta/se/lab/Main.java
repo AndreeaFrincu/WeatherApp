@@ -10,11 +10,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-
+/**
+ * This class is the entry point of the application
+ * @author Frîncu Andreea
+ */
 public class Main extends Application {
-
-    //private ObservableList<String> codes = FXCollections.observableArrayList();
-    //private ReadFile input = new ReadFile();
 
     public Main() throws FileNotFoundException {
     }
@@ -28,7 +28,6 @@ public class Main extends Application {
 
         AppController myController = new AppController();
 
-        //Parent loader = FXMLLoader.load(getClass().getResource("D:\\ATM stuff\\4th year\\sem1\\IP\\HW2\\weather-app\\src\\main\\resources\\view\\WeatherView.fxml"));
         FXMLLoader loader = new FXMLLoader(new File("D:\\ATM stuff\\4th year\\sem1\\IP\\HW2\\weather-app\\src\\main\\resources\\view\\WeatherView.fxml").toURI().toURL());
         //Parent root = loader.load();
         loader.setController(myController);

@@ -26,9 +26,35 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+/**
+ * This class is used to control the interface
+ * @author Frîncu Andreea
+ */
 public class AppController implements Initializable {
 
-    ReadData mockTest;
+    /**
+     * Class members description
+     *
+     * <b>loc</b> is the object of type Location used to populate the interface
+     *
+     * <b>inputFile</b> is the input file
+     *
+     * <b>selectedCode</b> is the selected country code from interface
+     *
+     * <b>selectedCity</b> is the city selected from the interface
+     *
+     * <b>connection</b> is a http connection used to interrogate the API
+     * for information on the weather state
+     *
+     * <b>tempConvert</b> is an object of type ToggleGroup used to group
+     * the two RadioButtons for selecting in which format to show the temperature
+     * value, Celsius or Fahrenheit
+     *
+     * <b>cTemp</b> is a member used to store the value in Celsius of the temperature
+     *
+     * <b>fTemp</b> is a member used to store the value in Fahrenheit of the temperature
+     */
+    ReadData mkTest;
 
     private Location loc;
     private ReadFile inputFile;
@@ -70,8 +96,12 @@ public class AppController implements Initializable {
     @FXML
     private ImageView weatherIcon;
 
+    /**
+     * AppController's Constructor
+     * @throws FileNotFoundException
+     */
     public AppController() throws FileNotFoundException {
-        this.inputFile = new ReadFile(mockTest);
+        this.inputFile = new ReadFile(mkTest);
         this.cityShow = new Label();
         this.countryCode = new ComboBox<String>();
         this.cityName = new ComboBox<String>();
@@ -86,6 +116,12 @@ public class AppController implements Initializable {
         this.weatherIcon = new ImageView();
     }
 
+    /**
+     * This method is used to initialize the application's window when the program starts
+     * All the buttons and combo boxes are disabled, just the button <b>start</b> is enabled
+     * @param location
+     * @param resources
+     */
     @FXML
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -109,6 +145,12 @@ public class AppController implements Initializable {
         this.fahrenheit.setToggleGroup(tempConvert);
     }
 
+    /**
+     * This method is called when the <b>start</b> button is clicked
+     * The combo box with country codes is enabled
+     * The start button becomes inactive, it's only active when we first start the application
+     * The combo box with countries codes based of the list with no duplicate codes
+     */
     public void startApp() {
         start.setOnAction(e -> {
             countryCode.setDisable(false);
@@ -125,6 +167,10 @@ public class AppController implements Initializable {
         search.setDisable(true);
     }
 
+    /**
+     * This method is called when the <b>search</b> button is clicked
+     * The connection is made through the method @getCityDataAPI
+     */
     public void searchApp() {
         search.setOnAction(e -> {
             countryCode.setDisable(true);
@@ -144,6 +190,10 @@ public class AppController implements Initializable {
         search.setDisable(true);
     }
 
+    /**
+     * This method is called when the <b>restart</b> button is clicked
+     * All the members of the interface are cleared and ready for another search
+     */
     public void restartApp() {
         restart.setOnAction(e -> {
             countryCode.setDisable(false);
@@ -176,6 +226,11 @@ public class AppController implements Initializable {
         }
     }
 
+    /**
+     * This method is called when selecting a country code from the <b>countryCode</b> combo box
+     * The combo box with the city names is enabled after selecting the country code
+     * @throws MalformedURLException
+     */
     public void setCountries() throws MalformedURLException {
         String codePicked = countryCode.getSelectionModel().getSelectedItem();
         cityShow.setText("");
@@ -194,6 +249,10 @@ public class AppController implements Initializable {
         cityName.setItems(setCities());
     }
 
+    /**
+     * This method is called when selecting a city from the <b>cityName</b> combo box
+     * The <b>search</b> button is enabled so the app can connect to the API and retrieve the data
+     */
     public void setLocation() {
         String cityPicked = cityName.getSelectionModel().getSelectedItem();
         this.cityShow.setText("");
@@ -201,6 +260,11 @@ public class AppController implements Initializable {
         search.setDisable(false);
     }
 
+    /**
+     * This method is used to populate the ObservableList with the
+     * country codes from the ArrayList with no duplicates
+     * @return
+     */
     public ObservableList<String> setNoDupCodes() {
         ObservableList<String> correctCodes = FXCollections.observableArrayList();
         ArrayList<String> coList = inputFile.getNoDupCountryCode();
@@ -210,6 +274,11 @@ public class AppController implements Initializable {
         return correctCodes;
     }
 
+    /**
+     * This method is called when selecting a country code and is used to populate
+     * the combo box with just the city names from the selected country
+     * @return
+     */
     public ObservableList<String> setCities() {
         ObservableList<String> correctCities = FXCollections.observableArrayList();
         ArrayList<String> idRow = inputFile.getCountryCode2();
@@ -221,10 +290,15 @@ public class AppController implements Initializable {
             }
             counter++;
         }
-
         return correctCities; //lista cu toate orasele pentru un anumit cod
     }
 
+    /**
+     * This method is called when the search button is clicked
+     * It is used to form a connection with the API
+     * The method sends a request, getting back a JSON file
+     * @throws IOException
+     */
     public void getCityDataAPI() throws IOException {
         BufferedReader jsonReader;
         String row;
@@ -255,6 +329,12 @@ public class AppController implements Initializable {
         parseJson(jsonContent.toString());
     }
 
+    /**
+     * This method is used to parse the JSON file received from the API
+     * The data is used to populate the object of type Location
+     * @param content
+     * @throws MalformedURLException
+     */
     public void parseJson(String content) throws MalformedURLException {
         JSONObject obj = new JSONObject(content);
 
@@ -285,8 +365,10 @@ public class AppController implements Initializable {
         initSearch();
     }
 
+    /**
+     * In this method are set all the values from the interface
+     */
     public void initSearch() {
-        //temp.setText(loc.cityTemperatureProperty().getValue());
         weatherIcon.setImage(new Image(loc.iconProperty().getValue()));
         comment.setText("Description:\n" + loc.descProperty().getValue());
         date.setText("Date and Time:\n" + loc.dateProperty().getValue());
@@ -295,6 +377,11 @@ public class AppController implements Initializable {
         windSpeed.setText(loc.windSpeedProperty().getValue() + " m/s");
     }
 
+    /**
+     * This method is used to convert the temperature from Kelvin (default from API)
+     * in Celsius and Fahrenheit
+     * @param tmp
+     */
     public void calcTemp(float tmp) {
         float auxFloat = 0;
         auxFloat = (float) (tmp - 273.15);
@@ -306,6 +393,11 @@ public class AppController implements Initializable {
         fTemp = Float.toString(auxFloat);
     }
 
+    /**
+     * This method is called when the RadioButtons are changed
+     * For each selection, the label with the temperature is changing
+     * @throws IOException
+     */
     public void radioButtonChange() throws IOException {
         if(this.tempConvert.getSelectedToggle().equals(this.celsius)){
             temp.setText(cTemp + " C");

@@ -26,12 +26,13 @@ public class LocationTest {
         System.out.println("after");
     }
 
+    /**
+     * Test to check if it gets data correct from file
+     */
     @Test
     public void getCountryCode() {
         input.parse();
-        //Location location = new Location(input.getCountryCode().get(0), input.getCityName().get(0));
-        System.out.println(input.getCityName().get(0));
+        input.getCityName().get(0).equals("Sheffield");
     }
-
 
 }
