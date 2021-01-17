@@ -13,11 +13,14 @@ import ro.mta.se.lab.ReadFile;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+/**
+ * This class contains tests for ReadFile
+ */
 public class ReadFileTest {
 
-    private ReadData mockTest;
+    private ReadData mkTest;
     ReadFile test;
-    ReadFile input = new ReadFile(mockTest);
+    ReadFile input = new ReadFile(mkTest);
 
     public ReadFileTest() throws FileNotFoundException {
 
@@ -33,28 +36,35 @@ public class ReadFileTest {
         System.out.println("after");
     }
 
+    /**
+     * Test to verify the input file path
+     */
     @Test
     public void setupPathTest() {
         assertEquals("D:\\ATM stuff\\4th year\\sem1\\IP\\HW2\\weather-app\\src\\main\\resources\\countries.txt",
                 input.setupPath());
     }
 
+    /**
+     * Test to verify the components of the members
+     * @throws IOException
+     */
     @Test
     public void parseTest() throws IOException {
         input.parse();
         assertEquals("Shibuya", input.getCityName().get(1));
         assertEquals("DE", input.getCountryCode().get(5));
         assertEquals("2670781", input.getCountryID().get(2));
-        assertEquals("47.7994", input.getCountryLat().get(7));
-        assertEquals("5.8667", input.getCountryLon().get(4));
+        assertEquals("47.7994", input.getCityLat().get(7));
+        assertEquals("5.8667", input.getCityLon().get(4));
     }
 
 
     @Before
     public void setMockTest() throws FileNotFoundException {
-        mockTest = mock(ReadData.class);
-        when(mockTest.getCities()).thenReturn("Rome");
-        test = new ReadFile(mockTest);
+        mkTest = mock(ReadData.class);
+        when(mkTest.getCities()).thenReturn("Rome");
+        test = new ReadFile(mkTest);
     }
 
     @Test
